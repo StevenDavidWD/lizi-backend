@@ -9,7 +9,7 @@ class user(models.Model):
     user_real_name = models.CharField(max_length = 20)
     user_points = models.IntegerField(default = 0)
     user_mail = models.CharField(max_length = 50)
-    user_head_img = models.CharField(max_length = 255)
+    user_head_img = models.ImageField(upload_tp='photos/%Y/%m/%d', blank = True, null = True)
     user_sex = models.IntegerField(default = 0)
     user_device_token = models.CharField(max_length = 255)
 
@@ -28,6 +28,11 @@ class course(models.Model):
     course_id = models.AutoField(primary_key = True)
     course_name = models.CharField(max_length = 255)
     teacher_id = models.ForeignKey(teacher)
+
+class studentCal(models.Model):
+    cal_id = models.AutoField(primary_key = True)
+    course_id = models.ForeignKey(course)
+    user_id = models.ForeignKey(user)
 
 class square(models.Model):
     square_id = models.AutoField(primary_key = True)
