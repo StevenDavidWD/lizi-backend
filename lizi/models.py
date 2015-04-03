@@ -9,7 +9,7 @@ class user(models.Model):
     user_real_name = models.CharField(max_length = 20)
     user_points = models.IntegerField(default = 0)
     user_mail = models.CharField(max_length = 50)
-    user_head_img = models.ImageField(upload_tp='photos/%Y/%m/%d', blank = True, null = True)
+    user_head_img = models.ImageField(upload_to='photos/%Y/%m/%d', blank = True, null = True)
     user_sex = models.IntegerField(default = 0)
     user_device_token = models.CharField(max_length = 255)
 
