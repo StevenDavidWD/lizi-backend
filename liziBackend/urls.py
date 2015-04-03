@@ -6,5 +6,6 @@ urlpatterns = patterns('',
     # url(r'^$', 'liziBackend.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
+    url(r'^lizi/', include('lizi.urls')),
     url(r'^admin/', include(admin.site.urls)),
 )
