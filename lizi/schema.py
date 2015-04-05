@@ -7,14 +7,23 @@ def convert_to_builtin_type(obj):
     builtin_type.update(obj.__dict__)
     return builtin_type
 
-def AccessToken(user_id, user_type, time):
+def AccessToken(user_id, user_type, time, token_type):
 	return {
 		'user_id' : user_id,
-		'aud' : user_type
-		'iss' : 'SundayDX'
+		'token_type' : token_type,
+		'aud' : user_type,
+		'iss' : 'SundayDX',
 		'exp' : datetime.datetime.utcnow() \
 				+ datetime.timedelta(days = time)
 			}
+
+class Response(object):
+
+	def __init__(self):
+		self.status = "00000"
+
+	def toJSON(self):
+		return json.dumps(self, default = convert_to_builtin_type)
 
 class Status(object):
 

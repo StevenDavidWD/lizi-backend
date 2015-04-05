@@ -17,9 +17,9 @@ POST:
 
 ```
 {
-	"status" : "0000",
-	"AccessToken" : "sadhfksjdahfa",
-	"RefreshToken" : "465466asrgasrgas"
+	"status": "00000",
+	"RefreshToken": "eyJhbGciOiJI...MMC5G2_aE",
+	"AccessToken": "eyJhbGci...CYkrZuFjnvBd8g"
 }
 ```
 
@@ -43,11 +43,25 @@ POST:
 
 ```
 {
-	"status" : "0000",
-	"AccessToken" : "regOk",
-	"RefreshToken" : "regOK"
+	"status": "00000",
+	"RefreshToken": "eyJhbGciOiJI...MMC5G2_aE",
+	"AccessToken": "eyJhbGci...CYkrZuFjnvBd8g"
 }
 ```
+
+### 更新AccessToken
+
+URL: http://xxx/lizi/refresh/
+
+POST:
+
+| 参数 | 类型 | 可否为空 | 描述 |
+| --- | ---- | ----- | --- |
+| RefreshToken | 字符串 | 否 | 更新Token |
+
+响应示例
+
+
 
 #### 教师添加课程
 
@@ -77,4 +91,4 @@ POST:
 
 | 参数 | 类型 | 可否为空 | 描述 |
 | --- | --- | --- | --- |
-| AccessToken | 字符串 | 否 | 用户权限验证 | 
+| AccessToken | 字符串 | 否 | 用户权限验证 |

@@ -47,6 +47,21 @@ def reg(request):
     return HttpResponse(response.toJSON())
 
 @csrf_exempt
+def refresh(request):
+    res = getResponse()
+    try:
+        token = checkToken(request.POST['RefreshToken'],
+                request.POST['user_type'])
+        res.RefreshToken, res.AccessToken = refreshToken(token)
+    except KeyError as e:
+        res.status = e.message
+    return HttpResponse(res.toJSON())
+
+@csrf_exempt
 def test(request):
-    res = checkToken(request.POST['AccessToken'], 's')
-    return HttpResponse(repr(res))
+    res = getResponse()
+    try:
+        checkToken(request.POST['AccessToken'], 's')
+    except Exception as e:
+        res.status = e.message
+    return HttpResponse(res.toJSON())
