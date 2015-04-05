@@ -12,23 +12,23 @@ from lizi.utils import *
 
 @csrf_exempt
 def login(request):
-    status, AccessToken, RefreshToken = init()
+    response = init()
     try:
         User = user.objects.get(phone_number = request.POST['phone_number'])
         # 检查用户密码
         if check_password(request.POST['password'], User.password):
-            AccessToken = 'ThisIsAAccessToken'
+            makeTokens(response, User, 's')
+            #response.setAccessToken = 'ThisIsAAccessToken'
         else:
-            status = '11001'
+            response.setStatus('11001')
     # 登陆用户不存在
     except user.DoesNotExist:
-        status = '11001'
-    return HttpResponse('''{"status" : "%s" , "AccessToken" : "%s", "RerfreshToken" : "%s"}'''
-            % (status, AccessToken, RefreshToken))
+        response.setStatus('11001')
+    return HttpResponse(response.toJSON())
 
 @csrf_exempt
 def reg(request):
-    status, AccessToken, RefreshToken = init()
+    response = init()
     try:
         User = user(phone_number = request.POST['phone_number'],
                 password = make_password(request.POST['password']),
@@ -36,12 +36,17 @@ def reg(request):
                 user_mail = request.POST['mail'],
                 user_device_token = request.POST['device_token'])
         User.save()
-        status = "00000"
+
+        makeTokens(response, User, 's')
     except IntegrityError:
         # 用户手机已被注册
-        status = '10001'
+        response.setStatus('10001')
     except KeyError:
         # POST 信息不完整
-        status = '00001'
-    return HttpResponse('''{"status" : "%s" , "AccessToken" : "%s", "RerfreshToken" : "%s"}'''
-            % (status, AccessToken, RefreshToken))
+        response.setStatus('00001')
+    return HttpResponse(response.toJSON())
+
+@csrf_exempt
+def test(request):
+    res = checkToken(request.POST['AccessToken'], 's')
+    return HttpResponse(repr(res))
