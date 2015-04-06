@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
 from django.db import models
 
 # Create your models here.
 
-class user(models.Model):
+# 学生用户信息表
+class User(models.Model):
     user_id = models.AutoField(primary_key = True)
     phone_number = models.CharField(max_length = 11, unique = True)
     password = models.CharField(max_length = 120)
@@ -13,7 +15,8 @@ class user(models.Model):
     user_sex = models.IntegerField(default = 0)
     user_device_token = models.CharField(max_length = 255)
 
-class teacher(models.Model):
+# 教师用户信息表
+class Teacher(models.Model):
     teacher_id = models.AutoField(primary_key = True)
     phone_number = models.CharField(max_length = 11, unique = True)
     password = models.CharField(max_length = 32)
@@ -24,40 +27,46 @@ class teacher(models.Model):
     teacher_sex = models.IntegerField(default = 0)
     teacher_device_token = models.CharField(max_length = 255)
 
-class course(models.Model):
+# 课程信息表
+class Course(models.Model):
     course_id = models.AutoField(primary_key = True)
     course_name = models.CharField(max_length = 255)
-    teacher_id = models.ForeignKey(teacher)
+    teacher_id = models.ForeignKey(Teacher)
 
-class studentCal(models.Model):
+# 学生选课关系表
+class StudentCal(models.Model):
     cal_id = models.AutoField(primary_key = True)
-    course_id = models.ForeignKey(course)
-    user_id = models.ForeignKey(user)
+    course_id = models.ForeignKey(Course)
+    user_id = models.ForeignKey(User)
 
-class square(models.Model):
+# 课程交流信息表
+class Square(models.Model):
     square_id = models.AutoField(primary_key = True)
     square_content = models.CharField(max_length = 2000)
-    course_id = models.ForeignKey(course)
-    user_id = models.ForeignKey(user)
+    course_id = models.ForeignKey(Course)
+    user_id = models.ForeignKey(User)
     square_time = models.DateTimeField()
 
-class square_reply(models.Model):
+# 课程交流信息回复表
+class SquareReply(models.Model):
     squarereply_id = models.AutoField(primary_key = True)
     squarereply_content = models.CharField(max_length = 1000)
-    square_id = models.ForeignKey(square)
-    user_id = models.ForeignKey(user)
+    square_id = models.ForeignKey(Square)
+    user_id = models.ForeignKey(User)
     squarereply_time = models.DateTimeField()
 
-class attendance(models.Model):
+# 签到信息表
+class Attendance(models.Model):
     course_id = models.AutoField(primary_key = True)
-    teacher_id = models.ForeignKey(teacher)
-    student_id = models.ForeignKey(user)
+    #teacher_id = models.ForeignKey(Teacher)
+    student_id = models.ForeignKey(User)
     attend_time = models.DateTimeField()
     attend_status = models.CharField(max_length = 10)
     attend_code = models.BigIntegerField()
 
-class code(models.Model):
+# 签到验证码信息表
+class Code(models.Model):
     id = models.AutoField(primary_key = True)
-    course_id = models.ForeignKey(course)
+    course_id = models.ForeignKey(Course)
     attend_code = models.BigIntegerField()
     attend_time = models.DateTimeField()
