@@ -109,7 +109,7 @@ def add_course_t(request):
     response.course_id = 'null'
     try:
         teacher = Teacher.objects.get(phone_number = request.POST['phone_number'])
-        token = check_token(request.POST['RefreshToken'], 
+        token = check_token(request.POST['AccessToken'], 
             request.POST['user_type'])
         course = Course(course_name = request.POST['course_name'],
             teacher_id = teacher.teacher_id)
@@ -127,7 +127,7 @@ def add_course(request):
     response.course_id = 'null'
     try:
         student = User.objects.get(phone_number = request.POST['phone_number'])
-        token = check_token(request.POST['RefreshToken'], 
+        token = check_token(request.POST['AccessToken'], 
             request.POST['user_type'])
         course = Course.objects.get(course_id = request.POST['course_id'])
 
@@ -150,14 +150,12 @@ def post_message(request):
     try:
         poster_type = request.POST['poster_type']
         if poster_type == 'User':
-            poster = User.objects.get(phone_number = request.POST['phone_number'])
+            poster = User.objects.get(user_name = request.POST['user_name'])
             poster_id = poster.user_id
         else:
             poster = Teacher.objects.get(phone_number = request.POST['phone_number'])
             poster_id = teacher_id
 
-        token = check_token(request.POST['RefreshToken'], 
-            poster_type)
         post = Square(square_content = request.POST['content'],
             course_id = request.POST['course_id'],
             user_id = poster_id,
@@ -186,7 +184,6 @@ def post_reply(request):
             replyer = Teacher.objects.get(phone_number = request.POST['phone_number'])
             replyer_id = replyer.teacher_id
 
-        token = check_token(request.POST['RefreshToken'],
             replyer_type)
         reply = SquareReply(squarereply_content = request.POST['reply_content'],
             square_id = request.POST['square_id'],
@@ -209,7 +206,7 @@ def search_course(request):
     response.course_list = []
     try:
         cour_id = request.POST['course_id']
-        tea_name = request.POST['teacher_real_name']
+        tea_name = request.POST['teacher_name']
         cour_name = request.POST['course_name']
         if cour_id.strip():
             response.course_list = Course.objects.filter(
@@ -235,7 +232,7 @@ def course_table(request):
         viewer_name = request.POST['viewer_name']
         viewer_type = request.POST['viewer_type']
         if viewer_type == 'User':
-            user_id = User.objects.get(user_real_name = 'viewer_name')
+            user_id = User.objects.get(user_name = 'viewer_name')
             course_id_list = StudentCal.objects.filter(user_id = user_id)
             for cid in course_id_list:
                 response.course_list.append(
@@ -246,6 +243,7 @@ def course_table(request):
             for cid in course_id_list:
                 response.course_list.append(
                     Course.objects.get(course_id = cid))
+
     except Exception as e:
             response.status = e.message
 
@@ -257,6 +255,8 @@ def set_attend_code(request):
     response = get_response()
     response.code_id = 'null'
     try:
+        token = check_token(request.POST['AccessToken'], 
+            request.POST['user_type'])
         teacher_name = request.POST['teacher_real_name']
         course_name = request.POST['course_name']
         teacher_id = Teacher.objects.get(teacher_real_name = teacher_name)
@@ -275,10 +275,64 @@ def set_attend_code(request):
 
     return HttpResponse(response.to_json())
 
-# 学生获得attend_code， 进行点名
+# 学生获得attend_code，进行点名
 @csrf_exempt
 def rollcall(request):
-    
+    response = get_response()
+    response.attend_status = 'null'
+
+    try:
+        token = check_token(request.POST['AccessToken'], 
+            request.POST['user_type'])
+        teacher_name = request.POST['teacher_real_name']
+        course_name = request.POST['course_name']
+        teacher_id = Teacher.objects.get(teacher_real_name = teacher_name)
+        course_id = Course.objects.get(course_name = cour_name, teacher_id = teacher_id).course_id
+        user_id = User.objects.get(user_real_name = request.POST['user_name']).user_id
+        code = Code.objects.get(course_id = course_id, teacher_id = teacher_id)
+        attend = Attendance(teacher_id = teacher_id,
+            course_id = course_id,
+            student_id = user_id
+            attend_code = request.POST['attend_code']
+            attend_time = datetime.datetime.utcnow()
+            )
+        if code.attend_code == attend.attend_code:
+            attend.attend_status = True
+        else:
+            attend.attend_status = False
+        attend.save()
+
+        response.attend_code = attend.attend_code
+        response.attend_status = attend.attend_status
+
+        except Exception as e:
+            response.status = e.message
+
+        return HttpResponse(response.to_json())
+
+# 查看点名结果
+@csrf_exempt
+def check_attend(request):
+    response = get_response()
+    response.attend_list = []
+    try:
+        teacher_name = request.POST['teacher_real_name']
+        course_name = request.POST['course_name']
+        teacher_id = Teacher.objects.get(teacher_real_name = teacher_name)
+        course_id = Course.objects.get(course_name = cour_name, teacher_id = teacher_id).course_id
+        attend = Attendance(teacher_id = teacher_id,
+            course_id = course_id)
+        code = Code.objects.get(teacher_id = teacher_id,
+            course_id = course_id)
+        for at in attend:
+            if at.attend_time - code.attend_time < datetime.deltatime(seconds = 120) and at.status == True:
+                response.attend_list.append(at)
+
+         except Exception as e:
+            response.status = e.message
+
+    return HttpResponse(response.to_json())
+
 
 # 验证AccessToken, 临时使用
 @csrf_exempt

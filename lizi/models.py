@@ -58,12 +58,16 @@ class SquareReply(models.Model):
 
 # 签到信息表
 class Attendance(models.Model):
-    course_id = models.AutoField(primary_key = True)
+    attend_id = models.AutoField(primary_key = True)
+    course_id = models.ForeignKey(Course)
     teacher_id = models.ForeignKey(Teacher)
     student_id = models.ForeignKey(User)
     attend_time = models.DateTimeField()
     attend_status = models.CharField(max_length = 10)
     attend_code = models.BigIntegerField()
+
+    class Meat:
+        ordering = ['-attend_time']
 
 
 # 签到验证码信息表

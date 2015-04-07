@@ -92,3 +92,83 @@ POST:
 | 参数 | 类型 | 可否为空 | 描述 |
 | --- | --- | --- | --- |
 | AccessToken | 字符串 | 否 | 用户权限验证 |
+
+### 发帖
+
+URL: http://xxx/lizi/postMessage/
+
+POST:
+| 参数 | 类型 | 可否为空 | 描述 |
+| --- | --- | --- | --- |
+| poster_type | 字符串 | 否 | 确定发帖者身份 |
+| phone_number | 字符串 | 否 | 确定发帖者账号 |
+| costent | 字符串 | 可 | 希望需要发布的内容 |
+| course_id | 字符串 | 否 | 课程编号 |
+
+### 回帖
+
+URL: http://xxx/lizi/postReply/
+
+POST:
+| 参数 | 类型 | 可否为空 | 描述 |
+| --- | --- | --- | --- |
+| replyer_type | 字符串 | 否 | 确定回帖者身份 |
+| phone_number | 字符串 | 否 | 确定回帖者账号 |
+| costent | 字符串 | 可 | 希望需要回复的内容 |
+| square_id | 字符串 | 否 | 帖子编号 |
+
+### 查找某门课程
+
+URL: http://xxx/lizi/searchCourse/
+
+POST:
+| 参数 | 类型 | 可否为空 | 描述 |
+| --- | --- | --- | --- |
+| course_id | 字符串 | 可 | 需查询的课程编号 |
+| course_name | 字符串 | 可 | 需查询的课程名 |
+| teacher_name | 字符串 | 可 | 希望查询的课程的任课教师名 |
+
+### 查找课表
+
+URL: http://xxx/lizi/course_table/
+
+POST:
+| 参数 | 类型 | 可否为空 | 描述 |
+| --- | --- | --- | --- |
+| viewer_type | 字符串 | 否 | 查询者类型(Student 或 Teacher) |
+| viewer_name | 字符串 | 可 | 查询者名字 |
+
+### 为某门课添加点名码
+
+URL: http://xxx/lizi/t/addend_code/
+
+POST:
+| 参数 | 类型 | 可否为空 | 描述 |
+| --- | --- | --- | --- |
+| AccessToken | 字符串 | 否 | 用户权限验证 |
+| course_name | 字符串 | 否 | 课程名 |
+| teacher_name | 字符串 | 否 | 任课老师 |
+| attend_code | 字符串 | 否 | 点名用校验码 |
+
+### 学生点名入口
+
+URL: http://xxx/lizi/rollCall/
+
+POST:
+| 参数 | 类型 | 可否为空 | 描述 |
+| --- | --- | --- | --- |
+| AccessToken | 字符串 | 否 | 用户权限验证 |
+| course_name | 字符串 | 否 | 课程名 |
+| teacher_name | 字符串 | 否 | 任课老师 |
+| user_name | 字符串 | 否 | 学生名 |
+| attend_code | 字符串 | 否 | 点名用校验码 |
+
+### 查看点名结果
+
+URL: http://xxx/lizi/checkAttend/
+
+POST:
+| 参数 | 类型 | 可否为空 | 描述 |
+| --- | --- | --- | --- |
+| course_name | 字符串 | 否 | 课程名 |
+| teacher_name | 字符串 | 否 | 任课老师 |
