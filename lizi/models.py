@@ -37,6 +37,7 @@ class Course(models.Model):
 class StudentCal(models.Model):
     cal_id = models.AutoField(primary_key = True)
     course_id = models.ForeignKey(Course)
+    teacher_id = models.ForeignKey(Teacher)
     user_id = models.ForeignKey(User)
 
 # 课程交流信息表
@@ -58,7 +59,7 @@ class SquareReply(models.Model):
 # 签到信息表
 class Attendance(models.Model):
     course_id = models.AutoField(primary_key = True)
-    #teacher_id = models.ForeignKey(Teacher)
+    teacher_id = models.ForeignKey(Teacher)
     student_id = models.ForeignKey(User)
     attend_time = models.DateTimeField()
     attend_status = models.CharField(max_length = 10)
@@ -68,5 +69,6 @@ class Attendance(models.Model):
 class Code(models.Model):
     id = models.AutoField(primary_key = True)
     course_id = models.ForeignKey(Course)
+    teacher_id = models.ForeignKey(Teacher)
     attend_code = models.BigIntegerField()
     attend_time = models.DateTimeField()
