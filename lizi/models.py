@@ -10,7 +10,7 @@ class User(models.Model):
     password = models.CharField(max_length = 120)
     user_real_name = models.CharField(max_length = 20)
     user_points = models.IntegerField(default = 0)
-    user_mail = models.CharField(max_length = 50)
+    user_mail = models.EmailField(max_length = 50)
     user_head_img = models.ImageField(upload_to='photos/%Y/%m/%d', blank = True, null = True)
     user_sex = models.IntegerField(default = 0)
     user_device_token = models.CharField(max_length = 255)
@@ -22,7 +22,7 @@ class Teacher(models.Model):
     password = models.CharField(max_length = 32)
     teacher_real_name = models.CharField(max_length = 20)
     teacher_points = models.IntegerField(default = 0)
-    teacher_mail = models.CharField(max_length = 50)
+    teacher_mail = models.EmailField(max_length = 50)
     teacher_head_img = models.CharField(max_length = 255)
     teacher_sex = models.IntegerField(default = 0)
     teacher_device_token = models.CharField(max_length = 255)
@@ -43,7 +43,7 @@ class StudentCal(models.Model):
 # 课程交流信息表
 class Square(models.Model):
     square_id = models.AutoField(primary_key = True)
-    square_content = models.CharField(max_length = 2000)
+    square_content = models.TextField
     course_id = models.ForeignKey(Course)
     user_id = models.ForeignKey(User)
     square_time = models.DateTimeField()
@@ -51,7 +51,7 @@ class Square(models.Model):
 # 课程交流信息回复表
 class SquareReply(models.Model):
     squarereply_id = models.AutoField(primary_key = True)
-    squarereply_content = models.CharField(max_length = 1000)
+    squarereply_content = models.TextField
     square_id = models.ForeignKey(Square)
     user_id = models.ForeignKey(User)
     squarereply_time = models.DateTimeField()
@@ -65,9 +65,10 @@ class Attendance(models.Model):
     attend_status = models.CharField(max_length = 10)
     attend_code = models.BigIntegerField()
 
+
 # 签到验证码信息表
 class Code(models.Model):
-    id = models.AutoField(primary_key = True)
+    code_id = models.AutoField(primary_key = True)
     course_id = models.ForeignKey(Course)
     teacher_id = models.ForeignKey(Teacher)
     attend_code = models.BigIntegerField()

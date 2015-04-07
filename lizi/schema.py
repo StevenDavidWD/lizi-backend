@@ -20,7 +20,7 @@ def access_token(user_id, user_type, time, token_type):
 		'iss' : 'SundayDX',
 		'exp' : datetime.datetime.utcnow() \
 				+ datetime.timedelta(days = time)
-			}
+	}
 
 # 每次回复的基本结构信息
 class Response(object):

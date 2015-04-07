@@ -27,7 +27,7 @@ POST:
 
 URL: http://xxx/lizi/reg/
 
-POST:
+POST:		
 
 | 参数 | 类型 | 可否为空 | 描述 |
 | --- | --- | --- | --- |
