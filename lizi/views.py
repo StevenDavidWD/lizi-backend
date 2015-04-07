@@ -95,7 +95,6 @@ def reg_t(request):
 def add_course_t(request):
     response = get_response()
 
-            `
 
 # AccessToken 更新操作
 @csrf_exempt
