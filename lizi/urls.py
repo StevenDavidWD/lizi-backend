@@ -11,6 +11,7 @@ urlpatterns = patterns('',
     url(r'^t/login/', views.login_t, name='login_t'),
     #注册
     url(r'^reg/', views.reg, name='reg'),
+<<<<<<< HEAD
     url(r'^t/reg/', views.reg_t, name='reg_t'),
 	#测试用
 	url(r'^test/', views.test, name='test'),
@@ -31,5 +32,8 @@ urlpatterns = patterns('',
 	#学生点名接口
 	url(r'^rollCall/', views.rollcall, name='rollcall'),
 	#查看点名人员的接口
-	url(r'^checkAttend/', views.checkattend, name='checkAttend'),
+	url(r'^t/checkAttend/', views.checkattend, name='checkAttend'),
+	
+    url(r'^test/', views.test, name='test'),
+    url(r'^refresh/', views.refresh, name='refresh')
 )
