@@ -31,6 +31,10 @@ class Response(object):
 	def to_json(self):
 		return json.dumps(self, default = convert_to_builtin_type)
 
+class AddError(Exception):
+    def __init__(self):
+        self.message = "Class has been added!"
+
 # 登录注册的回复基本结构
 class Status(object):
 
