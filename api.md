@@ -94,7 +94,7 @@ POST:
 | AccessToken | 字符串 | 否 | 用户权限验证 |
 | course_id | 字符串 | 否 | 课程编号 |
 
-### 学生发帖
+### 教师、学生发帖
 
 URL: http://xxx/lizi/postMessage/
 
@@ -104,6 +104,7 @@ POST:
 | AccessToken | 字符串 | 否 | 用户权限验证 |
 | costent | 字符串 | 可 | 希望需要发布的内容 |
 | course_id | 字符串 | 否 | 课程编号 |
+| user_type | 字符串 | 否 | 查询者类型('User' 或 'Teacher') |
 
 ### 回帖
 
@@ -115,6 +116,35 @@ POST:
 | AccessToken | 字符串 | 否 | 用户权限验证 |
 | costent | 字符串 | 可 | 希望需要回复的内容 |
 | square_id | 字符串 | 否 | 帖子编号 |
+| user_type | 字符串 | 否 | 查询者类型('User' 或 'Teacher') |
+
+### 查看帖子
+
+URL: http://xxx/lizi/checkMessage/
+
+POST:
+| 参数 | 类型 | 可否为空 | 描述 |
+| --- | --- | --- | --- |
+| course_id | 字符串 | 否 | 相关课程编号 |
+
+### 查看帖子
+
+URL: http://xxx/lizi/checkReply/
+
+POST:
+| 参数 | 类型 | 可否为空 | 描述 |
+| --- | --- | --- | --- |
+| square_id | 字符串 | 否 | 帖子编号 |
+
+
+### 查看相关课程学生
+
+URL: http://xxx/lizi/checkclassmates/
+
+POST:
+| 参数 | 类型 | 可否为空 | 描述 |
+| --- | --- | --- | --- |
+| course_id | 字符串 | 否 | 课程编号 |
 
 ### 查找某门课程
 
@@ -146,7 +176,6 @@ POST:
 | --- | --- | --- | --- |
 | AccessToken | 字符串 | 否 | 用户权限验证 |
 | course_id | 字符串 | 否 | 课程编号 |
-| attend_code | 字符串 | 否 | 点名用校验码 |
 
 ### 学生点名入口
 
@@ -159,9 +188,9 @@ POST:
 | course_id | 字符串 | 否 | 课程编号 |
 | attend_code | 字符串 | 否 | 点名用校验码 |
 
-### 教师查看点名结果
+### 教师查看成功点名结果
 
-URL: http://xxx/lizi/checkAttend/
+URL: http://xxx/lizi/t/checkAttendSec/
 
 POST:
 | 参数 | 类型 | 可否为空 | 描述 |
@@ -169,3 +198,13 @@ POST:
 | AccessToken | 字符串 | 否 | 用户权限验证 |
 | course_id | 字符串 | 否 | 课程编号 |
 | teacher_id | 字符串 | 否 | 任课老师编号 |
+
+### 教师查看成功点名结果
+
+URL: http://xxx/lizi/checkAttend/
+
+POST:
+| 参数 | 类型 | 可否为空 | 描述 |
+| --- | --- | --- | --- |
+| AccessToken | 字符串 | 否 | 用户权限验证 |
+| user_type | 字符串 | 否 | 查询者类型('User' 或 'Teacher') |

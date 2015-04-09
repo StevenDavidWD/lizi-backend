@@ -11,29 +11,31 @@ urlpatterns = patterns('',
     url(r'^t/login/', views.login_t, name='login_t'),
     #注册
     url(r'^reg/', views.reg, name='reg'),
-<<<<<<< HEAD
     url(r'^t/reg/', views.reg_t, name='reg_t'),
 	#测试用
 	url(r'^test/', views.test, name='test'),
 	#刷新token
 	url(r'^refresh/', views.refresh, name='refresh'),
 	#添加课程
-	url(r'^t/addCourse/', views.add_course_t, name='addCourse_t'),
-	url(r'^addCourse/', views.add_course, name='addCourse'),
+	url(r'^t/addcourse/', views.add_course_t, name='addCourse_t'),
+	url(r'^addcourse/', views.add_course, name='addCourse'),
 	#发布消息、回复消息
-	url(r'^postMessage/', views.post_message, name='postMessage'),	
-	url(r'^postReply/', views.post_reply, name='postReply'),
+	url(r'^postmessage/', views.post_message, name='postMessage'),	
+	url(r'^postreply/', views.post_reply, name='postReply'),
+	#查看消息、查看回复
+	url(r'^checkmessage/', views.check_post, name='checktMessage'),	
+	url(r'^checkreply/', views.check_post_reply, name='checkReply'),
 	#查找某门课
-	url(r'^searchCourse/', views.search_course, name='searchCourse'),
+	url(r'^searchcourse/', views.search_course, name='searchCourse'),
 	#查看课表
-	url(r'^course_table/', views.course_table, name='course_table'),
+	url(r'^coursetable/', views.course_table, name='coursetable'),
+	#查看相关课程学生
+	url(r'^checkclassmates/', views.check_classmates, name='checkclassmates'),
 	#为某一门课添加点名码
-	url(r'^t/addend_code', views.set_addend_code, name='addend_code'),
+	url(r'^t/addendcode', views.set_addend_code, name='addendcode'),
 	#学生点名接口
-	url(r'^rollCall/', views.rollcall, name='rollcall'),
+	url(r'^rollcall/', views.rollcall, name='rollcall'),
 	#查看点名人员的接口
-	url(r'^t/checkAttend/', views.checkattend, name='checkAttend'),
-	
-    url(r'^test/', views.test, name='test'),
-    url(r'^refresh/', views.refresh, name='refresh')
+	url(r'^t/checkattendsec/', views.check_attend_sec, name='checkAttendSec'),
+	url(r'^checkattend/', views.check_attend, name = 'checkAttend'),
 )

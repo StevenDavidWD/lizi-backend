@@ -7,6 +7,7 @@ from django.http import HttpResponse
 
 from lizi.models import User
 from lizi.utils import *
+import random
 
 # Create your views here.
 
@@ -149,19 +150,27 @@ def add_course(request):
 
     return HttpResponse(response.to_json())
 
-# 学生发帖
+# 教师、学生发帖
 @csrf_exempt
 def post_message(request):
     response = get_response()
     response.post_id = 'null'
     try:
         token = check_token(request.POST['AccessToken'],
-            's')
+            request.POST['user_type'])
 
-        post = Square(square_content = request.POST['content'],
-            course_id = request.POST['course_id'],
-            user_id = token['user_id'],
-            square_time = datetime.datetime.utcnow())
+        if token['aud'] == 'User':
+            post = Square(square_content = request.POST['content'],
+                course_id = request.POST['course_id'],
+                user_id = token['user_id'],
+                square_time = datetime.datetime.utcnow()
+            )
+        else:
+            post = Square(square_content = request.POST['content'],
+                course_id = request.POST['course_id'],
+                teacher_id = token['user_id'],
+                square_time = datetime.datetime.utcnow()
+            )
         post.save()
 
         response.post_id = post.square_id
@@ -171,19 +180,38 @@ def post_message(request):
 
     return HttpResponse(response.to_json())
 
+# 查看帖子
+@csrf_exempt
+def check_post(request):
+    response = get_response()
+    response.post_list = []
+    try:
+        response.post_list = Square.objects.filter(course_id = request.POST['course_id'])
+    except Exception as e:
+        response.status = e.message
+    return HttpResponse(response.to_json())
 
-# 回复帖子
+# 学生、教师回复帖子
 @csrf_exempt
 def post_reply(request):
     response = get_response()
     response.post_reply_id = 'null'
     try:
         token = check_token(request.POST['AccessToken'],
-            's')
-        reply = SquareReply(squarereply_content = request.POST['reply_content'],
-            square_id = request.POST['square_id'],
-            user_id = token['user_id'],
-            squarereply_time = datetime.datetime.utcnow())
+            request.POST['user_type'])
+
+        if token['aud'] == 'User':
+            reply = SquareReply(squarereply_content = request.POST['reply_content'],
+                square_id = request.POST['square_id'],
+                user_id = token['user_id'],
+                squarereply_time = datetime.datetime.utcnow()
+            )
+        else:
+            reply = SquareReply(squarereply_content = request.POST['reply_content'],
+                square_id = request.POST['square_id'],
+                teacher_id = token['user_id'],
+                squarereply_time = datetime.datetime.utcnow()
+            )
         reply.save()
 
         response.post_reply_id = reply.squarereply_id
@@ -193,6 +221,29 @@ def post_reply(request):
 
     return HttpResponse(response.to_json())
 
+# 查看回复
+@csrf_exempt
+def check_post_reply(request):
+    response = get_response()
+    response.post_reply_list = []
+    try:
+        response.post_reply_list = SquareReply.objects.filter(square_id = request.POST['square_id'])
+    except Exception as e:
+        response.status = e.message
+    return HttpResponse(response.to_json())
+
+# 查看相关课程的学生
+@csrf_exempt
+def check_classmates(request):
+    response = get_response()
+    response.user_list = []
+    try:
+        user_list = StudentCal.objects.filter(course_id = request.POST['course_id'])
+        for user in user_list:
+            response.user_list.append(User.objects.get(user_id = user.user_id))
+    except Exception as e:
+        response.status = e.message
+    return HttpResponse(response.to_json())
 
 # 搜索课程 无token
 @csrf_exempt
@@ -238,12 +289,12 @@ def course_table(request):
             course_id_list = StudentCal.objects.filter(user_id = token['user_id'])
             for cid in course_id_list:
                 response.course_list.append(
-                    Course.objects.get(course_id = cid))
+                    Course.objects.get(course_id = cid.course_id))
         else:
             course_id_list = StudentCal.objects.filter(teacher_id = token['user_id'])
             for cid in course_id_list:
                 response.course_list.append(
-                    Course.objects.get(course_id = cid))
+                    Course.objects.get(course_id = cid.course_id))
 
     except Exception as e:
             response.status = e.message
@@ -261,11 +312,12 @@ def set_attend_code(request):
         code = Code(
             course_id = request.POST['course_id']
             teacher_id = token['user_id'],
-            attend_code = request.POST['attend_code'],
+            attend_code = random.randint(1000, 9999),
             attend_time = datetime.datetime.utcnow())
         code.save()
 
         response.code_id = code.code_id
+        response.attend_code = code.attend_code
 
     except Exception as e:
             response.status = e.message
@@ -306,16 +358,16 @@ def rollcall(request):
 
     return HttpResponse(response.to_json())
 
-# 查看点名结果
+# 教师查看成功点名结果
 @csrf_exempt
-def check_attend(request):
+def check_attend_suc(request):
     response = get_response()
     response.attend_list = []
     try:
         token = check_token(request.POST['AccessToken'],
             't')
 
-        teacher_id = Teacher.objects.get(request.POST['teacher_id'])
+        teacher_id = Teacher.objects.get(token['user_id'])
         course_id = Course.objects.get(request.POST['course_id'])
         attend = Attendance(teacher_id = teacher_id,
             course_id = course_id)
@@ -330,6 +382,22 @@ def check_attend(request):
 
     return HttpResponse(response.to_json())
 
+# 查看近期点名情况
+@csrf_exempt
+def check_attend(request):
+    response = get_response()
+    response.attend_list = []
+    try:
+        token = check_token(request.POST['AccessToken'], 
+            request.POST['user_type'])
+        if token['aud'] == 'User':
+            attend_list = Attendance.objects.filter(student_id =token['user_id'])
+        else:
+            attend_list = Attendance.objects.filter(teacher_id = token['user_id'])
+    except Exception as e:
+        response.status = e.message
+
+    return HttpResponse(response.to_json())
 
 # 验证AccessToken,临时使用
 @csrf_exempt

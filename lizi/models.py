@@ -46,7 +46,11 @@ class Square(models.Model):
     square_content = models.TextField
     course_id = models.ForeignKey(Course)
     user_id = models.ForeignKey(User)
+    teacher_id = models.ForeignKey(Teacher)
     square_time = models.DateTimeField()
+
+    class Meta:
+        ordering = ['-square_time']
 
 # 课程交流信息回复表
 class SquareReply(models.Model):
@@ -54,7 +58,11 @@ class SquareReply(models.Model):
     squarereply_content = models.TextField
     square_id = models.ForeignKey(Square)
     user_id = models.ForeignKey(User)
+    teacher_id = models.ForeignKey(Teacher)
     squarereply_time = models.DateTimeField()
+
+    class Meta:
+        ordering = ['-squarereply_time']
 
 # 签到信息表
 class Attendance(models.Model):
